@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
+    <TextView
+        android:id="@+id/smsNumberText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="NUMBER_GOES_HERE"
+        android:textColor="@color/number">
+    </TextView>
+    <TextView
+        android:id="@+id/smsContent"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/smsNumberText"
+        android:text="Content"
+        android:textColor="@color/content">
+    </TextView>
+
+</LinearLayout>
