@@ -5,27 +5,24 @@
     android:id = "@+id/frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="#fda53a"
+    android:padding="@dimen/activity_vertical_margin"
+    android:background="#ffffff"
     android:gravity="center"
-    tools:context=".database.UploadData">
+    tools:context=".database.UploadOnDrive">
 
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Successfully Uploaded to Drive"
+        android:text="Successfully Uploaded!"
         android:id="@+id/success"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:gravity="center"
         android:padding="10dp"
         android:textSize="40sp"
         android:layout_gravity="center"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <ProgressBar
 
@@ -33,6 +30,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/progressBar"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"/>
 
 </FrameLayout>

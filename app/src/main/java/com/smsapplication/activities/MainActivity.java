@@ -24,7 +24,7 @@ import com.smsapplication.R;
 import com.smsapplication.utils.RecyclerViewItemClickListener;
 import com.smsapplication.adapters.SMSAdapter;
 import com.smsapplication.models.SMSData;
-import com.smsapplication.database.UploadData;
+import com.smsapplication.database.UploadOnDrive;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            Intent i = new Intent(MainActivity.this,UploadData.class);
+            Intent i = new Intent(MainActivity.this,UploadOnDrive.class);
             startActivity(i);
         }
 

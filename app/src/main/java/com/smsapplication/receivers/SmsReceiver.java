@@ -34,7 +34,7 @@ public class SmsReceiver extends BroadcastReceiver
                 smsMessageStr += "SMS From: " + address + "\n";
                 smsMessageStr += smsBody + "\n";
             }
-            Toast.makeText(context, smsMessageStr, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, smsMessageStr, Toast.LENGTH_SHORT).show();
             showNotification(context, smsMessageStr);
 
         }
@@ -42,7 +42,7 @@ public class SmsReceiver extends BroadcastReceiver
 
         else
         {
-            Toast.makeText(context, "nnnn", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Message not sent", Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -55,14 +55,14 @@ public class SmsReceiver extends BroadcastReceiver
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(c)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("SMS notification")
+                        .setSmallIcon(R.drawable.ic_email)
+                        .setContentTitle("New Message")
                         .setContentText(notificationTitle)
                         .setContentIntent(pIntent)
                         .setAutoCancel(true);
 
         NotificationManager notificationmanager = (NotificationManager) c
                 .getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationmanager.notify(0, mBuilder.build());
+        notificationmanager.notify(2, mBuilder.build());
     }
 }

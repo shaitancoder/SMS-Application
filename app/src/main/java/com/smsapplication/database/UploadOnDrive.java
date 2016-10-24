@@ -39,7 +39,7 @@ import java.io.OutputStream;
 /**
  * Created by harshita30 on 22/10/16.
  */
-public class UploadData extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+public class UploadOnDrive extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
 
@@ -65,7 +65,7 @@ public class UploadData extends AppCompatActivity implements GoogleApiClient.Con
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         View root = rl.getRootView();
-        root.setBackgroundColor(getResources().getColor(R.color.number));
+        root.setBackgroundColor(getResources().getColor(R.color.background));
         String file_name ="SmsList.txt";
         textFile = new File(getFilesDir(),file_name);
 
@@ -173,18 +173,16 @@ public class UploadData extends AppCompatActivity implements GoogleApiClient.Con
                 @Override
                 public void onResult(DriveFolder.DriveFileResult result) {
                     if (!result.getStatus().isSuccess()) {
-                        Toast.makeText(UploadData.this,
+                        Toast.makeText(UploadOnDrive.this,
                                 "Error adding file to Drive", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    Toast.makeText(UploadData.this,
-                            "File successfully added to Drive", Toast.LENGTH_SHORT).show();
                     showProgress(false);
 
-                    rl.setBackgroundColor(getResources().getColor(R.color.number));
+                    rl.setBackgroundColor(getResources().getColor(R.color.background));
                     View root = rl.getRootView();
-                    root.setBackgroundColor(getResources().getColor(R.color.number));
+                    root.setBackgroundColor(getResources().getColor(R.color.background_text));
 
                     success.setVisibility(View.VISIBLE);
 
