@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "601076376663",
+    "project_id": "smsapplication-147406"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:601076376663:android:77ec08bff8af074c",
+        "android_client_info": {
+          "package_name": "com.smsapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "601076376663-spe5bi3qdpk1mt2btuf07hvu032si70g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.smsapplication",
+            "certificate_hash": "A1AFE4B02436D3B15ADAA4CA58CF992B35C88E2F"
+          }
+        },
+        {
+          "client_id": "601076376663-nksc4h36p9mdf3d0fnaghcojsle91nsl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrXOnpWZIt8X5B585zsBBwyqWA59Oyk_A"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
