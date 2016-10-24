@@ -135,7 +135,7 @@ public class UploadOnDrive extends AppCompatActivity implements GoogleApiClient.
                             OutputStream outputStream = driveContents.getOutputStream();
                             addTextfileToOutputStream(outputStream);
                             MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                                    .setTitle("AllSmsBackup")
+                                    .setTitle("SmsBackup")
                                     .setMimeType("text/plain")
                                     .setDescription("The file contains the backup of all the sms until now")
                                     .setStarred(true).build();
