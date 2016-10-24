@@ -66,12 +66,12 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 selectedText = et.getText().toString();
-                updateListOfCustomSmss();
+                updateListOfSms();
             }
         });
     }
 
-    public void updateListOfCustomSmss() {
+    public void updateListOfSms() {
 
         if (selectedText != null && !selectedText.equals("")) {
 

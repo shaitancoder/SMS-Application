@@ -48,7 +48,6 @@ public class ReadAllSmsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-        Toast.makeText(getApplicationContext(),"Use the up button to return",Toast.LENGTH_LONG).show();
+        super.onBackPressed();
     }
 }

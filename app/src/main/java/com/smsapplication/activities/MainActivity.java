@@ -21,7 +21,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.smsapplication.R;
-import com.smsapplication.utils.RecyclerViewItemClickListener;
+import com.smsapplication.utils.ItemOnClickListener;
 import com.smsapplication.adapters.SMSAdapter;
 import com.smsapplication.models.SMSData;
 import com.smsapplication.database.UploadOnDrive;
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private SMSAdapter smsAdapter;
     private ArrayList<SMSData> smsDataList;
     private Cursor c;
-    private ExportTask exportTask;
+    private UploadToDrive uploadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,18 +71,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        final ArrayList<SMSData> smslist, smsgrouplist;
-        smslist = new ArrayList<>();
-        smsgrouplist = new ArrayList<>();
+        final ArrayList<SMSData> sms_list, smslist_group;
+        sms_list = new ArrayList<>();
+        smslist_group = new ArrayList<>();
 
         int REQUEST_CODE_ASK_PERMISSIONS = 123;
         try{
+            //Permission for API >=23
             if(ContextCompat.checkSelfPermission(getBaseContext(), "android.permission.READ_SMS") == PackageManager.PERMISSION_GRANTED) {}
             else{
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{"android.permission.READ_SMS"}, REQUEST_CODE_ASK_PERMISSIONS);}
 
-            Uri uriSms = Uri.parse("content://sms/inbox");
-            c = getContentResolver().query(uriSms,new String[]{"_id", "address", "date", "body"},null,null,null);
+            c = getContentResolver().query(Uri.parse("content://sms/inbox"),new String[]{"_id", "address", "date", "body"},null,null,null);
             StringBuilder sb = new StringBuilder();
 
             if (c != null && c.getCount() > 0) {
@@ -94,15 +94,16 @@ public class MainActivity extends AppCompatActivity {
                     sb.append(body).append("\n");
                     sb.append(date).append("\n");
                     sb.append("\n");
-                    smslist.add(new SMSData(address, date, body));
+                    sms_list.add(new SMSData(address, date, body));
                 }
                 c.close();
             }
 
-            smsDataList= smslist;
+            smsDataList= sms_list;
+            //MAP to store the details of all the messages associated with one sender
             Map<String, SMSData> map = new LinkedHashMap<>();
 
-            for (SMSData message : smslist) {
+            for (SMSData message : sms_list) {
 
                 SMSData existingValue = map.get(message.address);
                 if(existingValue == null){
@@ -110,29 +111,27 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            smsgrouplist.clear();
-            smsgrouplist.addAll(map.values());
+            smslist_group.clear();
+            smslist_group.addAll(map.values());
 
-            smsAdapter= new SMSAdapter(MainActivity.this);
-            smsAdapter.updateList(smsgrouplist);
+            smsAdapter= new SMSAdapter(smslist_group);
             recyclerView.setAdapter(smsAdapter);
 
             recyclerView.addOnItemTouchListener(
-                    new RecyclerViewItemClickListener(getApplicationContext(), new RecyclerViewItemClickListener.OnItemClickListener() {
+                    new ItemOnClickListener(getApplicationContext(), new ItemOnClickListener.OnItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {
-                            // TODO Handle item click
-                            ArrayList<SMSData> smsinsidegroup = new ArrayList<SMSData>();
 
-                            String n = smsgrouplist.get(position).address;
+                            ArrayList<SMSData> smslist_inside = new ArrayList<SMSData>();
+                            String n = smslist_group.get(position).address;
 
-                            for (int i = 0; i < smslist.size(); i++) {
-                                if(smslist.get(i).address.equals(n))
-                                    smsinsidegroup.add(smslist.get(i));
+                            for (int i = 0; i < sms_list.size(); i++) {
+                                if(sms_list.get(i).address.equals(n))
+                                    smslist_inside.add(sms_list.get(i));
                             }
 
                             Intent i = new Intent(MainActivity.this, ReadAllSmsActivity.class);
-                            i.putParcelableArrayListExtra("messages", smsinsidegroup);
+                            i.putParcelableArrayListExtra("messages", smslist_inside);
                             startActivity(i);
                         }
                     })
@@ -145,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    class ExportTask extends AsyncTask<Void, Integer, Uri> {
+    class UploadToDrive extends AsyncTask<Void, Integer, Uri> {
 
         ProgressDialog pDialog;
 
@@ -164,46 +163,43 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Uri doInBackground(Void... params) {
+            FileOutputStream fos = null;
+            try {
+                String file_name ="SmsList.txt";
+                File file = new File(getFilesDir(),file_name);
+                if (!file.exists())
+                    file.createNewFile();
+                    //Storing the file inside the internal storage of the device since all device may no have external storage
+                fos = openFileOutput(file_name, Context.MODE_PRIVATE);
+                c = getContentResolver().query(Uri.parse("content://sms/inbox"),null,null,null,null);
+                int count = c.getCount(), i = 0;
 
-            if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-                FileOutputStream fos = null;
-                try {
-                    String file_name ="SmsList.txt";
-                    File file = new File(getFilesDir(),file_name);
-                    if (!file.exists())
-                        file.createNewFile();
-                    fos = openFileOutput(file_name, Context.MODE_PRIVATE);
-
-                    Uri uriSms = Uri.parse("content://sms/inbox");
-                    c = getContentResolver().query(uriSms,new String[]{"_id", "address", "date", "body"},null,null,null);
-                    int count = c.getCount(), i = 0;
-
-                    StringBuilder sb = new StringBuilder();
-                    if (c.moveToFirst()) {
-                        do {
-                            sb.append(c.getString(c.getColumnIndex("address")))
-                                    .append("\n");
-                            sb.append(c.getString(c.getColumnIndex("body")))
-                                    .append("\n");
-                            sb.append(c.getString(c.getColumnIndex("date")))
-                                    .append("\n");
-                            sb.append("\n");
-                            publishProgress(++i*100/count);
+                StringBuilder sb = new StringBuilder();
+                if (c.moveToFirst()) {
+                    do {
+                        sb.append(c.getString(c.getColumnIndex("address")))
+                                .append("\n");
+                        sb.append(c.getString(c.getColumnIndex("body")))
+                                .append("\n");
+                        sb.append(c.getString(c.getColumnIndex("date")))
+                                .append("\n");
+                        sb.append("\n");
+                        publishProgress(++i*100/count);
                         } while (!isCancelled() && c.moveToNext());
+                }
+                fos.write(sb.toString().getBytes());
+                return Uri.fromFile(file);
+                }
+            catch (Exception e) {
+                }
+            finally {
+                if (fos != null) {
+                    try {
+                        fos.close();
                     }
-                    fos.write(sb.toString().getBytes());
-                    return Uri.fromFile(file);
-
-                } catch (Exception e) {
-                } finally {
-                    if (fos != null) {
-                        try {
-                            fos.close();
-                        } catch (IOException e) {}
-                    }
+                    catch (IOException e) {}
                 }
             }
-
             return null;
         }
 
@@ -217,13 +213,11 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Uri result) {
             super.onPostExecute(result);
             pDialog.dismiss();
-
             if (result == null) {
-                Toast.makeText(MainActivity.this, "Export task failed!",
+                Toast.makeText(MainActivity.this, "Export to file failed! File may not be accessibe.",
                         Toast.LENGTH_LONG).show();
                 return;
             }
-
             Intent i = new Intent(MainActivity.this,UploadOnDrive.class);
             startActivity(i);
         }
@@ -232,14 +226,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
         if (id == R.id.action_search) {
             Intent i = new Intent(MainActivity.this,SearchActivity.class);
@@ -248,8 +240,8 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_share) {
-            exportTask = new ExportTask();
-            exportTask.execute();
+            uploadTask = new UploadToDrive();
+            uploadTask.execute();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -257,9 +249,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        if (exportTask != null) {
-            exportTask.cancel(false);
-            exportTask.pDialog.dismiss();
+        if (uploadTask != null) {
+            uploadTask.cancel(false);
+            uploadTask.pDialog.dismiss();
         }
         super.onPause();
     }

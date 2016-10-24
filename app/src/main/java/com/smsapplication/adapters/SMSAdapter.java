@@ -34,8 +34,9 @@ public class SMSAdapter extends RecyclerView.Adapter<SMSAdapter.MyViewHolder> {
             textView3= (TextView) v.findViewById(R.id.body);
         }
     }
-    public SMSAdapter(Context context) {
-        this.context = context;
+    public SMSAdapter(ArrayList<SMSData> data) {
+        smsDataList = data;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -66,8 +67,4 @@ public class SMSAdapter extends RecyclerView.Adapter<SMSAdapter.MyViewHolder> {
         return smsDataList.size();
     }
 
-    public void updateList(ArrayList<SMSData> data) {
-        smsDataList = data;
-        notifyDataSetChanged();
-    }
 }

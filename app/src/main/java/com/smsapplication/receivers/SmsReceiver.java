@@ -27,22 +27,13 @@ public class SmsReceiver extends BroadcastReceiver
             String smsMessageStr = "";
             for (int i = 0; i < sms.length; ++i) {
                 SmsMessage smsMessage = SmsMessage.createFromPdu((byte[]) sms[i]);
-
                 String smsBody = smsMessage.getMessageBody().toString();
                 String address = smsMessage.getOriginatingAddress();
 
                 smsMessageStr += "SMS From: " + address + "\n";
                 smsMessageStr += smsBody + "\n";
             }
-//            Toast.makeText(context, smsMessageStr, Toast.LENGTH_SHORT).show();
             showNotification(context, smsMessageStr);
-
-        }
-
-
-        else
-        {
-            Toast.makeText(context, "Message not sent", Toast.LENGTH_SHORT).show();
 
         }
     }

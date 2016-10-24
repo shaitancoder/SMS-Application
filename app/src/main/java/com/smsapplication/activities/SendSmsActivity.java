@@ -44,13 +44,13 @@ public class SendSmsActivity extends AppCompatActivity {
                 try {
                     SmsManager smsManager = SmsManager.getDefault();
                     smsManager.sendTextMessage(phoneNo, null, sms, null, null);
-                    Toast.makeText(getApplicationContext(), "SMS Sent!",
+                    Toast.makeText(getApplicationContext(), "Sent!",
                             Toast.LENGTH_LONG).show();
                     
 
                 } catch (Exception e) {
                     Toast.makeText(getApplicationContext(),
-                            "SMS faild, please try again later!",
+                            "SMS failed!",
                             Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
