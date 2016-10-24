@@ -39,8 +39,8 @@ public class ReadAllSmsActivity extends AppCompatActivity {
         LinearLayoutManager llm = new LinearLayoutManager(ReadAllSmsActivity.this);
         rv.setLayoutManager(llm);
 
-        adapter = new SMSAdapter(ReadAllSmsActivity.this);
-        adapter.updateList(messageList);
+        adapter = new SMSAdapter(messageList);
+
         rv.setAdapter(adapter);
 
 

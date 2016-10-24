@@ -94,8 +94,7 @@ public class SearchActivity extends AppCompatActivity {
                 }
 
 
-                adapter = new SMSAdapter(getApplicationContext());
-                adapter.updateList(searchList);
+                adapter = new SMSAdapter(searchList);
                 rv.setAdapter(adapter);
 
             }
